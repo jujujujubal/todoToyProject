@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ToDoService {
     List<ToDoResponsePostDto> getToDo();
-    ToDoResponsePostDto saveToDo(ToDoRequestPostDto toDoRequestPostDto);
+    ToDoResponsePostDto saveToDo(ToDoRequestPostDto toDoRequestPostDto, String userPersonalId);
 
     ToDoResponsePostDto updateToDo(ToDoRequestPostDto toDoRequestPostDto, String postId);
 

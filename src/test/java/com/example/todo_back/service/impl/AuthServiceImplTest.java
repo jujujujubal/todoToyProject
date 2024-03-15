@@ -79,7 +79,7 @@ class AuthServiceImplTest {
         //if 문에서 true가 나오도록
         Mockito.when(passwordEncoder.matches(loginDto.getPassword(), memberEntity.getPassword())).thenReturn(true);
 
-        Mockito.when(jwtTokenProvider.createToken(memberEntity.getPersonalId(), memberEntity.getRole().name(), memberEntity.getNickname())).thenReturn(dummy_token);
+        Mockito.when(jwtTokenProvider.createToken(memberEntity.getPersonalId(), memberEntity.getRole().name())).thenReturn(dummy_token);
 
         String result = authService.login(loginDto);
 
@@ -87,7 +87,7 @@ class AuthServiceImplTest {
 
         verify(memberRepository).findByPersonalId(loginDto.getPersonalId());
         verify(passwordEncoder).matches(loginDto.getPassword(), memberEntity.getPassword());
-        verify(jwtTokenProvider).createToken(memberEntity.getPersonalId(), memberEntity.getRole().name(), memberEntity.getNickname());
+        verify(jwtTokenProvider).createToken(memberEntity.getPersonalId(), memberEntity.getRole().name());
     }
 
     @Test

@@ -27,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Transactional
     @Override
     public Boolean signUp(SignUpDto signUpDto){
         //이미 존재하는 아이디를 입력한 경우
@@ -43,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
         return true;
     }
 
+    @Transactional
     @Override
     public String login(LoginDto loginDto){
         MemberEntity memberEntity = memberRepository.findByPersonalId(loginDto.getPersonalId())
@@ -50,7 +52,6 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(loginDto.getPassword(), memberEntity.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        String role = memberEntity.getRole().name();
-        return jwtTokenProvider.createToken(memberEntity.getPersonalId(), role, memberEntity.getNickname());
+        return jwtTokenProvider.createToken(memberEntity.getPersonalId(), memberEntity.getRole().name());
     }
 }

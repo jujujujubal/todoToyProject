@@ -27,6 +27,9 @@ public class PostEntity {
     @Column(name = "userid")
     private String userId;
 
+    @Column(name = "usernickname")
+    private String userNickname;
+
     @Column(nullable = false, length = 50)
     private String title;
 
@@ -41,10 +44,11 @@ public class PostEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval=true)
     private List<ContentEntity> contents;
 
+
     public ToDoResponsePostDto toDto() {
         ToDoResponsePostDto toDoResponsePostDto = new ToDoResponsePostDto();
         toDoResponsePostDto.setPostId(this.postId);
-        toDoResponsePostDto.setUserId(this.userId);
+        toDoResponsePostDto.setUserNickname(this.userNickname);
         toDoResponsePostDto.setTitle(this.title);
         toDoResponsePostDto.setCreateTime(this.createTime);
         toDoResponsePostDto.setColor(this.color);

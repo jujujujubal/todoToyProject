@@ -16,26 +16,24 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ToDoRequestPostDto {
-    private String userId;
     private String title;
     private List<ToDoRequestContentDto> content;
-    private ColorList color;
 
-    public PostEntity toEntity() {
-        PostEntity postEntity = new PostEntity();
-        postEntity.setPostId(UUID.randomUUID().toString());
-        postEntity.setUserId(this.getUserId());
-        postEntity.setTitle(this.getTitle());
-        postEntity.setColor(this.getColor());
-
-        List<ContentEntity> contentEntityList = new ArrayList<>();
-
-        for (ToDoRequestContentDto toDoRequestContentDto : this.content) {
-            contentEntityList.add(toDoRequestContentDto.toEntity());
-        }
-
-        postEntity.setContents(contentEntityList);
-
-        return postEntity;
-    }
+//    public PostEntity toEntity() {
+//        PostEntity postEntity = new PostEntity();
+//        postEntity.setPostId(UUID.randomUUID().toString());
+//        postEntity.setUserId(this.getUserId());
+//        postEntity.setTitle(this.getTitle());
+//        postEntity.setColor(this.getColor());
+//
+//        List<ContentEntity> contentEntityList = new ArrayList<>();
+//
+//        for (ToDoRequestContentDto toDoRequestContentDto : this.content) {
+//            contentEntityList.add(toDoRequestContentDto.toEntity());
+//        }
+//
+//        postEntity.setContents(contentEntityList);
+//
+//        return postEntity;
+//    }
 }

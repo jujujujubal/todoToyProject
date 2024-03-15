@@ -1,5 +1,7 @@
 package com.example.todo_back.jwt;
 
+import com.example.todo_back.data.constant.ColorList;
+import com.example.todo_back.data.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -37,10 +39,9 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰 생성
-    public String createToken(String personalId, String role, String nickname) {
+    public String createToken(String personalId, String role) {
         Claims claims = Jwts.claims().setSubject(personalId);
         claims.put("role", role); // 정보는 key/value 쌍으로 저장됩니다.
-        claims.put("nickname", nickname);
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
@@ -53,7 +54,7 @@ public class JwtTokenProvider {
     // JWT 토큰에서 인증 정보 조회
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(this.getPersonalId(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, "password", userDetails.getAuthorities());
     }
 
     // 토큰에서 회원 정보 추출
@@ -80,9 +81,9 @@ public class JwtTokenProvider {
         }
     }
 
-    //현재 로그인한 사용자의 개인 식별자(Personal ID)를 반환하는 메서드
-    public static String getLoginUserPersonalId() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userDetails.getUsername();
-    }
+//    //현재 로그인한 사용자의 개인 식별자(Personal ID)를 반환하는 메서드
+//    public static String getLoginUserPersonalId() {
+//        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        return userDetails.getUsername();
+//    }
 }

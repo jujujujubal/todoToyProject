@@ -5,13 +5,17 @@ import com.example.todo_back.data.dto.ToDoRequestPostDto;
 import com.example.todo_back.data.dto.ToDoResponseContentDto;
 import com.example.todo_back.data.dto.ToDoResponsePostDto;
 import com.example.todo_back.data.entity.ContentEntity;
+import com.example.todo_back.data.entity.MemberEntity;
 import com.example.todo_back.data.entity.PostEntity;
 import com.example.todo_back.data.repository.ContentRepository;
+import com.example.todo_back.data.repository.MemberRepository;
 import com.example.todo_back.data.repository.PostRepository;
 import com.example.todo_back.service.ToDoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.User;
+import org.hibernate.Hibernate;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -21,16 +25,19 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.Comparator;
 
+@Transactional
 @Service
 public class ToDoServiceImpl implements ToDoService {
 
     private final PostRepository postRepository;
     private final ContentRepository contentRepository;
+    private final MemberRepository memberRepository;
 
     @Autowired
-    public ToDoServiceImpl(PostRepository postRepository, ContentRepository contentRepository){
+    public ToDoServiceImpl(PostRepository postRepository, ContentRepository contentRepository, MemberRepository memberRepository){
         this.postRepository = postRepository;
         this.contentRepository = contentRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -56,13 +63,18 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
-    @Transactional
-    public ToDoResponsePostDto saveToDo(ToDoRequestPostDto toDoRequestPostDto){
+    public ToDoResponsePostDto saveToDo(ToDoRequestPostDto toDoRequestPostDto, String userPersonalId){
+        System.out.println("@@@@@@@@@@@userPersonalId는 " + userPersonalId);
+
+        MemberEntity memberEntity = memberRepository.findByPersonalId(userPersonalId)
+                .orElseThrow(() -> new IllegalArgumentException("일치하는 회원이 없습니다."));
+
         PostEntity postEntity = new PostEntity();
         postEntity.setPostId(UUID.randomUUID().toString());
-        postEntity.setUserId(toDoRequestPostDto.getUserId());
+        postEntity.setUserId(memberEntity.getPersonalId());
+        postEntity.setUserNickname(memberEntity.getNickname());
         postEntity.setTitle(toDoRequestPostDto.getTitle());
-        postEntity.setColor(toDoRequestPostDto.getColor());
+        postEntity.setColor(memberEntity.getColor());
 
         PostEntity savedPost = postRepository.save(postEntity);
         List<ToDoResponseContentDto> toDoResponseContentDtoList = new ArrayList<>();
@@ -79,7 +91,7 @@ public class ToDoServiceImpl implements ToDoService {
 
         ToDoResponsePostDto toDoResponsePostDto = new ToDoResponsePostDto();
         toDoResponsePostDto.setPostId(savedPost.getPostId());
-        toDoResponsePostDto.setUserId(savedPost.getUserId());
+        toDoResponsePostDto.setUserNickname(savedPost.getUserNickname());
         toDoResponsePostDto.setTitle(savedPost.getTitle());
         toDoResponsePostDto.setColor(savedPost.getColor());
         toDoResponsePostDto.setCreateTime(savedPost.getCreateTime());
@@ -89,14 +101,25 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
-    @Transactional
     public ToDoResponsePostDto updateToDo(ToDoRequestPostDto toDoRequestPostDto, String postId){
         Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
         if (optionalPostEntity.isPresent()){
             PostEntity postEntity = optionalPostEntity.get();
-            LocalDateTime localDateTime = postEntity.getCreateTime();
-            deleteToDo(postId);
-            return saveToDo(toDoRequestPostDto);
+            postEntity.setTitle(toDoRequestPostDto.getTitle());
+            postEntity.getContents().clear();
+
+            List<ContentEntity> contentEntityList = new ArrayList<>();
+            for (ToDoRequestContentDto toDoRequestContentDto : toDoRequestPostDto.getContent()) {
+                ContentEntity contentEntity = new ContentEntity();
+                contentEntity.setContent(toDoRequestContentDto.getContent());
+                contentEntity.setIsComplete(toDoRequestContentDto.getIsComplete());
+                contentEntity.setIndexNum(toDoRequestContentDto.getIndexNum());
+                contentEntity.setId(UUID.randomUUID().toString());
+                contentEntity.setPost(postEntity);
+                contentEntityList.add(contentEntity);
+            }
+            postEntity.getContents().addAll(contentEntityList);
+            return postEntity.toDto();
         } else {
             throw new RuntimeException("입력한 POST ID와 일치하는 POST가 존재하지 않습니다. Post with ID " + postId + " not found");
         }
@@ -117,7 +140,6 @@ public class ToDoServiceImpl implements ToDoService {
 
 
     @Override
-    @Transactional
     public void deleteToDo(String postId){
         postRepository.deleteByPostId(postId);
     }
