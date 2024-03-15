@@ -49,10 +49,6 @@ class AuthControllerTest {
     @MockBean
     private CustomUserDetailsService customUserDetailsService;
 
-//    {
-//        given(customUserDetailsService.loadUserByUsername(personalId)).willReturn(UserDetails);
-//    }
-
     @Test
     //@WithCustomMockUser
     @DisplayName("회원가입 테스트")
