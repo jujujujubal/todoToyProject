@@ -71,7 +71,7 @@ class AuthServiceImplTest {
     @DisplayName("로그인 성공")
     void login() {
         LoginDto loginDto = LoginDto.builder().personalId("test123456").password("test123456").build();
-        MemberEntity memberEntity = MemberEntity.builder().personalId("test123456").password(passwordEncoder.encode("test123456")).nickname("dummy").role(Role.User).color(yellow).build();
+        MemberEntity memberEntity = MemberEntity.builder().personalId("test123456").password(passwordEncoder.encode("test123456")).nickname("dummy").role(Role.ROLE_User).color(yellow).build();
         String dummy_token = "dummy_token";
 
         Mockito.when(memberRepository.findByPersonalId(loginDto.getPersonalId())).thenReturn(Optional.of(memberEntity));
@@ -104,7 +104,7 @@ class AuthServiceImplTest {
     @DisplayName("로그인 실패 - 비밀번호 불일치")
     void login_wrong() {
         LoginDto loginDto = LoginDto.builder().personalId("test123456").password("test123456").build();
-        MemberEntity memberEntity = MemberEntity.builder().personalId("test123456").password(passwordEncoder.encode("test1234")).nickname("dummy").role(Role.User).color(yellow).build();
+        MemberEntity memberEntity = MemberEntity.builder().personalId("test123456").password(passwordEncoder.encode("test1234")).nickname("dummy").role(Role.ROLE_User).color(yellow).build();
         Mockito.when(memberRepository.findByPersonalId(loginDto.getPersonalId())).thenReturn(Optional.of(memberEntity));
 
         //if 문에서 true가 나오도록

@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtAuthenticationProvider;
@@ -25,11 +26,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = jwtAuthenticationProvider.resolveToken(request);
         log.info("토큰은 {}", token);
         if (token != null && jwtAuthenticationProvider.validateToken(token)) {
-            log.info("1번자리@@@@@@@@@@@@@@@@@@@@@");
             Authentication authentication = jwtAuthenticationProvider.getAuthentication(token);
-            log.info("2번자리@@@@@@@@@@@@@@@@@@@@@");
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.info("3번자리@@@@@@@@@@@@@@@@@@@@@");
         }
 
         filterChain.doFilter(request, response);

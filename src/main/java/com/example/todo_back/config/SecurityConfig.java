@@ -21,15 +21,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-//                .formLogin().disable()
                 .httpBasic().disable()
 //                .cors().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/auth/signUp", "/api/v1/auth/login").permitAll()
-                .antMatchers("/api/v1/todo").hasRole("User")
+                .antMatchers("/api/v1/auth/*").permitAll()
+                .antMatchers("/api/v1/todo/**").hasRole("User")
                 .antMatchers("/v2/api-docs", "/swagger*/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

@@ -28,7 +28,7 @@ class MemberRepositoryTest {
 
     @Test
     public void testContentEntity() {
-        MemberEntity memberEntity = MemberEntity.builder().personalId("dummyPersonalId").password("dummy_password").nickname("admin").role(Role.User).color(ColorList.yellow).build();
+        MemberEntity memberEntity = MemberEntity.builder().personalId("dummyPersonalId").password("dummy_password").nickname("admin").role(Role.ROLE_User).color(ColorList.yellow).build();
         memberRepository.save(memberEntity);
 
         MemberEntity findMemberEntity = memberRepository.findById(memberEntity.getPersonalId()).get();
@@ -38,8 +38,8 @@ class MemberRepositoryTest {
 
     @Test
     public void basicCRUD() {
-        MemberEntity memberEntity1 = MemberEntity.builder().personalId("dummyPersonalId1").password("dummy_password").nickname("admin1").role(Role.User).color(ColorList.yellow).build();
-        MemberEntity memberEntity2 = MemberEntity.builder().personalId("dummyPersonalId2").password("dummy_password").nickname("admin2").role(Role.User).color(ColorList.yellow).build();
+        MemberEntity memberEntity1 = MemberEntity.builder().personalId("dummyPersonalId1").password("dummy_password").nickname("admin1").role(Role.ROLE_User).color(ColorList.yellow).build();
+        MemberEntity memberEntity2 = MemberEntity.builder().personalId("dummyPersonalId2").password("dummy_password").nickname("admin2").role(Role.ROLE_User).color(ColorList.yellow).build();
         memberRepository.save(memberEntity1);
         memberRepository.save(memberEntity2);
 
@@ -73,7 +73,7 @@ class MemberRepositoryTest {
 
     @Test
     void findByPersonalId() {
-        MemberEntity memberEntity = MemberEntity.builder().personalId("dummyPersonalId").password("dummy_password").nickname("admin").role(Role.User).color(ColorList.yellow).build();
+        MemberEntity memberEntity = MemberEntity.builder().personalId("dummyPersonalId").password("dummy_password").nickname("admin").role(Role.ROLE_User).color(ColorList.yellow).build();
         memberRepository.save(memberEntity);
 
         MemberEntity findMemberEntity = memberRepository.findByPersonalId(memberEntity.getPersonalId()).get();

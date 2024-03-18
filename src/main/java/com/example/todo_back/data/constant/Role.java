@@ -1,5 +1,5 @@
 package com.example.todo_back.data.constant;
 
 public enum Role {
-    User, Admin
+    ROLE_User, ROLE_Admin
 }

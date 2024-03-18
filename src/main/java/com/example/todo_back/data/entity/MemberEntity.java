@@ -41,7 +41,7 @@ public class MemberEntity implements UserDetails {
     private ColorList color;
 
     public void addUserAuthority() {
-        this.role = Role.User;
+        this.role = Role.ROLE_User;
     }
     public void passwordEncode(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(password);

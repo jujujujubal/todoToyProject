@@ -68,7 +68,7 @@ public class JwtTokenProvider {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")){
             return bearerToken.substring(7);
         }
-        return "aaa";
+        return "";
     }
 
     // 토큰의 유효성 + 만료일자 확인
