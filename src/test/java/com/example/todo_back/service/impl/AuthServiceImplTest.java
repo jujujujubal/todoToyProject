@@ -65,7 +65,7 @@ class AuthServiceImplTest {
         //처음 if문에서 true가 나오도록
         Mockito.when(memberRepository.findByPersonalId(signUpDto.getPersonalId())).thenReturn(Optional.of(new MemberEntity()));
 
-        Assertions.assertThrows(RuntimeException.class, () -> authService.signUp(signUpDto));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> authService.signUp(signUpDto));
     }
     @Test
     @DisplayName("로그인 성공")

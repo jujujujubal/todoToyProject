@@ -30,17 +30,19 @@ public class AuthController {
     //회원가입
     @PostMapping("/signUp")
     public ResponseEntity<Map<String, Object>> signUp(@Valid @RequestBody SignUpDto signUpDto){
+        Map<String, Object> responseObject = new HashMap<>();
         try {
             Boolean singUpSuccess = authService.signUp(signUpDto);
-
-            Map<String, Object> responseObject = new HashMap<>();
             responseObject.put("success", true);
             responseObject.put("error_code", 0);
             responseObject.put("item", singUpSuccess);
 
             return ResponseEntity.status(HttpStatus.OK).body(responseObject);
-        } catch (RuntimeException e){
-            throw e;
+        } catch (IllegalArgumentException e){
+            responseObject.put("success", false);
+            responseObject.put("error_code", 409);
+            responseObject.put("item", "존재하는 아이디입니다.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(responseObject);
         }
     }
 
@@ -64,8 +66,13 @@ public class AuthController {
             responseObject.put("item", loginSuccess);
 
             return ResponseEntity.status(HttpStatus.OK).body(responseObject);
-        } catch (RuntimeException e){
-            throw e;
+
+        } catch (IllegalArgumentException e){
+            responseObject.put("success", false);
+            responseObject.put("error_code", 404);
+            responseObject.put("item", "일치하는 회원이 없습니다.");
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseObject);
         }
 
     }

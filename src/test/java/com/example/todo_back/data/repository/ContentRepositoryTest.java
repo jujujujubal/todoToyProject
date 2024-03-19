@@ -30,8 +30,7 @@ class ContentRepositoryTest {
 
     @Test
     public void testContentEntity() {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").title("dummy_title").createTime(localDateTime).color(ColorList.yellow).build();
+        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title").color(ColorList.yellow).build();
         postRepository.save(postEntity);
         ContentEntity contentEntity = ContentEntity.builder().id("dummy_id").post(postEntity).content("dummy_content").isComplete(ToDoEntityStatus.uncompleted).indexNum("1").build();
         contentRepository.save(contentEntity);
@@ -48,8 +47,7 @@ class ContentRepositoryTest {
 
     @Test
     public void basicCRUD() {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").title("dummy_title").createTime(localDateTime).color(ColorList.yellow).build();
+        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title").color(ColorList.yellow).build();
         postRepository.save(postEntity);
 
         ContentEntity contentEntity1 = ContentEntity.builder().id("dummy1_id").post(postEntity).content("dummy1_content").isComplete(ToDoEntityStatus.uncompleted).indexNum("1").build();

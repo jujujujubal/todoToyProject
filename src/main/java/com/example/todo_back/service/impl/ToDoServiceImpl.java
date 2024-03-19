@@ -41,7 +41,7 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
-    public List<ToDoResponsePostDto> getToDo(){//수정하기(너무 길다)
+    public List<ToDoResponsePostDto> getToDo(){
         List<PostEntity> postEntityList = postRepository.findAll(Sort.by(Sort.Direction.ASC, "createTime"));
         List<ToDoResponsePostDto> toDoResponsePostDtoList = new ArrayList<>();
 
@@ -79,12 +79,8 @@ public class ToDoServiceImpl implements ToDoService {
         PostEntity savedPost = postRepository.save(postEntity);
         List<ToDoResponseContentDto> toDoResponseContentDtoList = new ArrayList<>();
         for (ToDoRequestContentDto toDoRequestContentDto : toDoRequestPostDto.getContent()) {
-            ContentEntity contentEntity = new ContentEntity();
+            ContentEntity contentEntity = toDoRequestContentDto.toEntity();
             contentEntity.setPost(savedPost);
-            contentEntity.setContent(toDoRequestContentDto.getContent());
-            contentEntity.setIsComplete(toDoRequestContentDto.getIsComplete());
-            contentEntity.setIndexNum(toDoRequestContentDto.getIndexNum());
-            contentEntity.setId(UUID.randomUUID().toString());
             ContentEntity saveContent = contentRepository.save(contentEntity);
             toDoResponseContentDtoList.add(saveContent.toDto());
         }
@@ -105,21 +101,25 @@ public class ToDoServiceImpl implements ToDoService {
         Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
         if (optionalPostEntity.isPresent()){
             PostEntity postEntity = optionalPostEntity.get();
-            postEntity.setTitle(toDoRequestPostDto.getTitle());
-            postEntity.getContents().clear();
+            PostEntity new_postEntity = new PostEntity();
+            new_postEntity.setPostId(postEntity.getPostId());
+            new_postEntity.setUserId(postEntity.getUserId());
+            new_postEntity.setUserNickname(postEntity.getUserNickname());
+            new_postEntity.setTitle(toDoRequestPostDto.getTitle());
+            new_postEntity.setCreateTime(postEntity.getCreateTime());
+            new_postEntity.setColor(postEntity.getColor());
 
             List<ContentEntity> contentEntityList = new ArrayList<>();
             for (ToDoRequestContentDto toDoRequestContentDto : toDoRequestPostDto.getContent()) {
-                ContentEntity contentEntity = new ContentEntity();
-                contentEntity.setContent(toDoRequestContentDto.getContent());
-                contentEntity.setIsComplete(toDoRequestContentDto.getIsComplete());
-                contentEntity.setIndexNum(toDoRequestContentDto.getIndexNum());
-                contentEntity.setId(UUID.randomUUID().toString());
+                ContentEntity contentEntity = toDoRequestContentDto.toEntity();
                 contentEntity.setPost(postEntity);
                 contentEntityList.add(contentEntity);
             }
-            postEntity.getContents().addAll(contentEntityList);
-            return postEntity.toDto();
+            new_postEntity.setContents(contentEntityList);
+
+            PostEntity savedPostEntity = postRepository.save(new_postEntity);
+
+            return savedPostEntity.toDto();
         } else {
             throw new RuntimeException("입력한 POST ID와 일치하는 POST가 존재하지 않습니다. Post with ID " + postId + " not found");
         }

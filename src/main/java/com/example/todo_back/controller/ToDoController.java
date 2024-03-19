@@ -41,7 +41,10 @@ public class ToDoController {
     //투두 내용을 받기. (작성시간, 작성자 아이디, 타이틀, 소내용(배열)(완료 여부, 소제목))
     @PostMapping(value = "/create")
     public ResponseEntity<ToDoResponsePostDto> createToDo(@Valid @RequestBody ToDoRequestPostDto toDoRequestPostDto){
+        System.out.println("12");
         MemberEntity memberEntity = (MemberEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println("123");
+
         ToDoResponsePostDto toDoResponsePostDto = toDoService.saveToDo(toDoRequestPostDto, memberEntity.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body(toDoResponsePostDto);
     }

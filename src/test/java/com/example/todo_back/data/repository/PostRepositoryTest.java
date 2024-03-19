@@ -28,7 +28,7 @@ class PostRepositoryTest {
     public void testContentEntity() {
         ContentEntity contentEntity = ContentEntity.builder().id("dummy_id").content("dummy_content").isComplete(ToDoEntityStatus.uncompleted).indexNum("1").build();
 
-        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").title("dummy_title").createTime(LocalDateTime.now()).color(ColorList.yellow).contents(List.of(contentEntity)).build();
+        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title").color(ColorList.yellow).contents(List.of(contentEntity)).build();
         postRepository.save(postEntity);
 
         PostEntity findPostEntity = postRepository.findById(postEntity.getPostId()).get();
@@ -41,8 +41,8 @@ class PostRepositoryTest {
         ContentEntity contentEntity1 = ContentEntity.builder().id("dummy1_id").content("dummy1_content").isComplete(ToDoEntityStatus.uncompleted).indexNum("1").build();
         ContentEntity contentEntity2 = ContentEntity.builder().id("dummy2_id").content("dummy2_content").isComplete(ToDoEntityStatus.uncompleted).indexNum("2").build();
 
-        PostEntity postEntity1 = PostEntity.builder().postId("dummy1_postId").userId("admin").title("dummy_title1").createTime(LocalDateTime.now()).color(ColorList.yellow).contents(List.of(contentEntity1)).build();
-        PostEntity postEntity2 = PostEntity.builder().postId("dummy2_postId").userId("admin").title("dummy_title2").createTime(LocalDateTime.now()).color(ColorList.yellow).contents(List.of(contentEntity2)).build();
+        PostEntity postEntity1 = PostEntity.builder().postId("dummy1_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title1").color(ColorList.yellow).contents(List.of(contentEntity1)).build();
+        PostEntity postEntity2 = PostEntity.builder().postId("dummy2_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title2").color(ColorList.yellow).contents(List.of(contentEntity2)).build();
 
         postRepository.save(postEntity1);
         postRepository.save(postEntity2);
@@ -79,7 +79,7 @@ class PostRepositoryTest {
     void deleteByPostId() {
         //만들고 저장
         ContentEntity contentEntity = ContentEntity.builder().id("dummy_id").content("dummy_content").isComplete(ToDoEntityStatus.uncompleted).indexNum("1").build();
-        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").title("dummy_title").createTime(LocalDateTime.now()).color(ColorList.yellow).contents(List.of(contentEntity)).build();
+        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title").color(ColorList.yellow).contents(List.of(contentEntity)).build();
         postRepository.save(postEntity);
 
         //잘 저장됐는지 확인

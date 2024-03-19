@@ -1,5 +1,6 @@
 package com.example.todo_back.mock;
 
+import com.example.todo_back.data.entity.MemberEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,18 +19,11 @@ public class WithCustomMockUserSecurityFactory implements WithSecurityContextFac
 
     @Override
     public SecurityContext createSecurityContext(WithCustomMockUser customUser){
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-
-        List<GrantedAuthority> authorities = Arrays.stream(customUser.roles())
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-
-        UserDetails principal = new User(customUser.personalId(), "password", authorities);
-        Authentication auth = new UsernamePasswordAuthenticationToken(principal, "password", authorities);
+        MemberEntity member = MemberEntity.builder().personalId(customUser.personalId()).password(customUser.password()).nickname(customUser.nickname()).role(customUser.role()).color(customUser.color()).build();
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(member, member.getPassword(), List.of(new SimpleGrantedAuthority(member.getRole().name())));
+        SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(auth);
-
         return context;
-
     }
 
 }

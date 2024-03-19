@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     public Boolean signUp(SignUpDto signUpDto){
         //이미 존재하는 아이디를 입력한 경우
         if(memberRepository.findByPersonalId(signUpDto.getPersonalId()).isPresent()){
-            throw new RuntimeException("존재하는 아이디입니다.");
+            throw new IllegalArgumentException("존재하는 아이디입니다.");
         }
         // 아이디 형식이 올바르지 않은 경우 (@Valid 로 400에러가 뜸)
         // 패스워드 형식이 올바르지 않은 경우 (@Valid 로 400에러가 뜸)
