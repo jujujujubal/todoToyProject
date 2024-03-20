@@ -18,5 +18,5 @@ public class ToDoResponsePostDto {
     private String title;
     private List<ToDoResponseContentDto> content;
     private LocalDateTime createTime;
-    private ColorList color;
+    private String color;
 }

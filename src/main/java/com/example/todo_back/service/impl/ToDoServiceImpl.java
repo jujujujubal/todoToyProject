@@ -87,7 +87,7 @@ public class ToDoServiceImpl implements ToDoService {
         toDoResponsePostDto.setPostId(savedPost.getPostId());
         toDoResponsePostDto.setUserNickname(savedPost.getUserNickname());
         toDoResponsePostDto.setTitle(savedPost.getTitle());
-        toDoResponsePostDto.setColor(savedPost.getColor());
+        toDoResponsePostDto.setColor(savedPost.getColor().toString());
         toDoResponsePostDto.setCreateTime(savedPost.getCreateTime());
         toDoResponsePostDto.setContent(toDoResponseContentDtoList);
 

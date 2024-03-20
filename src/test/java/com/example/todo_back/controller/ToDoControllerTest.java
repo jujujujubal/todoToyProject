@@ -59,7 +59,7 @@ class ToDoControllerTest {
     @DisplayName("ToDo 전부 받아오기 테스트")
     void getToDo() {
         ToDoResponseContentDto contentDto = ToDoResponseContentDto.builder().id("test_id").content("test_content").isComplete(UNCOMPLETED).build();
-        ToDoResponsePostDto postDto = ToDoResponsePostDto.builder().postId("string").userNickname("admin").title("test_title").content(List.of(contentDto)).color(YELLOW).build();
+        ToDoResponsePostDto postDto = ToDoResponsePostDto.builder().postId("string").userNickname("admin").title("test_title").content(List.of(contentDto)).color(YELLOW.toString()).build();
 
         given(toDoService.getToDo()).willReturn(List.of(postDto));
 
@@ -87,7 +87,7 @@ class ToDoControllerTest {
         ToDoRequestPostDto toDoRequestPostDto = ToDoRequestPostDto.builder().title("dummyTitle").content(List.of(toDoRequestContentDto)).build();
 
         ToDoResponseContentDto contentDto = ToDoResponseContentDto.builder().id("test_id").content("test_content").isComplete(UNCOMPLETED).build();
-        ToDoResponsePostDto postDto = ToDoResponsePostDto.builder().postId("string").userNickname("Test_nickname").title("test_title").content(List.of(contentDto)).color(YELLOW).build();
+        ToDoResponsePostDto postDto = ToDoResponsePostDto.builder().postId("string").userNickname("Test_nickname").title("test_title").content(List.of(contentDto)).color(YELLOW.toString()).build();
 
         //WithCustomMockUser 에서 지정한 유저 아이디
         String dummy_id = "TestPersonalId";
@@ -119,7 +119,7 @@ class ToDoControllerTest {
         ToDoRequestPostDto toDoRequestPostDto = ToDoRequestPostDto.builder().title("dummyTitle").content(List.of(toDoRequestContentDto)).build();
 
         ToDoResponseContentDto contentDto = ToDoResponseContentDto.builder().id("test_id").content("test_content").isComplete(UNCOMPLETED).build();
-        ToDoResponsePostDto postDto = ToDoResponsePostDto.builder().postId("string").userNickname("Test_nickname").title("test_title").content(List.of(contentDto)).color(YELLOW).build();
+        ToDoResponsePostDto postDto = ToDoResponsePostDto.builder().postId("string").userNickname("Test_nickname").title("test_title").content(List.of(contentDto)).color(YELLOW.toString()).build();
 
         given(toDoService.updateToDo(toDoRequestPostDto, postId)).willReturn(postDto);
 

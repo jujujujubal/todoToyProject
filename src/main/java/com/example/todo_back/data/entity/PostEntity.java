@@ -51,7 +51,7 @@ public class PostEntity {
         toDoResponsePostDto.setUserNickname(this.userNickname);
         toDoResponsePostDto.setTitle(this.title);
         toDoResponsePostDto.setCreateTime(this.createTime);
-        toDoResponsePostDto.setColor(this.color);
+        toDoResponsePostDto.setColor(this.color.toString());
         List<ToDoResponseContentDto> toDoResponseContentDto = new ArrayList<>();
 
         for (ContentEntity contentEntity : this.contents) {
