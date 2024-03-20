@@ -1,8 +1,8 @@
 package com.example.todo_back.data.constant;
 
 public enum ColorList {
-    RED("Red"), BLUE("Blue"), GREEN("Green"), YELLOW("Yellow"), BLACK("Black"),
-    CYAN("Cyan"), BEIGE("Beige"), CHARTREUSE("Chartreuse"), PALEGREEN("Pale Green");
+    RED("red"), BLUE("blue"), GREEN("green"), YELLOW("yellow"), BLACK("black"),
+    CYAN("cyan"), BEIGE("beige"), CHARTREUSE("chartreuse"), PALEGREEN("palegreen");
 
     private final String stringValue;
 
