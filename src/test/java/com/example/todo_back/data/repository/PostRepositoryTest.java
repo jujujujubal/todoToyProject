@@ -25,24 +25,24 @@ class PostRepositoryTest {
     PostRepository postRepository;
 
     @Test
-    public void testContentEntity() {
-        ContentEntity contentEntity = ContentEntity.builder().id("dummy_id").content("dummy_content").isComplete(ToDoEntityStatus.uncompleted).indexNum("1").build();
+    void testContentEntity() {
+        ContentEntity contentEntity = ContentEntity.builder().id("dummy_id").content("dummy_content").isComplete(ToDoEntityStatus.UNCOMPLETED).indexNum("1").build();
 
-        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title").color(ColorList.yellow).contents(List.of(contentEntity)).build();
+        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title").color(ColorList.YELLOW).contents(List.of(contentEntity)).build();
         postRepository.save(postEntity);
 
         PostEntity findPostEntity = postRepository.findById(postEntity.getPostId()).get();
 
-        Assertions.assertEquals(findPostEntity, postEntity);
+        Assertions.assertEquals(postEntity, findPostEntity);
     }
 
     @Test
-    public void basicCRUD() {
-        ContentEntity contentEntity1 = ContentEntity.builder().id("dummy1_id").content("dummy1_content").isComplete(ToDoEntityStatus.uncompleted).indexNum("1").build();
-        ContentEntity contentEntity2 = ContentEntity.builder().id("dummy2_id").content("dummy2_content").isComplete(ToDoEntityStatus.uncompleted).indexNum("2").build();
+    void basicCRUD() {
+        ContentEntity contentEntity1 = ContentEntity.builder().id("dummy1_id").content("dummy1_content").isComplete(ToDoEntityStatus.UNCOMPLETED).indexNum("1").build();
+        ContentEntity contentEntity2 = ContentEntity.builder().id("dummy2_id").content("dummy2_content").isComplete(ToDoEntityStatus.UNCOMPLETED).indexNum("2").build();
 
-        PostEntity postEntity1 = PostEntity.builder().postId("dummy1_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title1").color(ColorList.yellow).contents(List.of(contentEntity1)).build();
-        PostEntity postEntity2 = PostEntity.builder().postId("dummy2_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title2").color(ColorList.yellow).contents(List.of(contentEntity2)).build();
+        PostEntity postEntity1 = PostEntity.builder().postId("dummy1_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title1").color(ColorList.YELLOW).contents(List.of(contentEntity1)).build();
+        PostEntity postEntity2 = PostEntity.builder().postId("dummy2_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title2").color(ColorList.YELLOW).contents(List.of(contentEntity2)).build();
 
         postRepository.save(postEntity1);
         postRepository.save(postEntity2);
@@ -51,46 +51,46 @@ class PostRepositoryTest {
         PostEntity findPostEntity1 = postRepository.findById(postEntity1.getPostId()).get();
         PostEntity findPostEntity2 = postRepository.findById(postEntity2.getPostId()).get();
 
-        Assertions.assertEquals(findPostEntity1, postEntity1);
-        Assertions.assertEquals(findPostEntity2, postEntity2);
+        Assertions.assertEquals(postEntity1, findPostEntity1);
+        Assertions.assertEquals(postEntity2, findPostEntity2);
 
         findPostEntity1.setTitle("수정 후 title 내용");
 
         //리스트 조회 검증
         List<PostEntity> allPostEntity = postRepository.findAll();
-        Assertions.assertEquals(allPostEntity.size(), 2);
+        Assertions.assertEquals(2, allPostEntity.size());
 
         //setContent가 잘 반영되었음을 알 수 있다
-        System.out.println("수정된 내용" + allPostEntity);
+        //System.out.println("수정된 내용" + allPostEntity);
 
         //카운트 검증
         long count = postRepository.count();
-        Assertions.assertEquals(count, 2);
+        Assertions.assertEquals(2, count);
 
         //삭제 검증
         postRepository.delete(postEntity1);
         postRepository.delete(postEntity2);
 
         long afterDeleteCount = postRepository.count();
-        Assertions.assertEquals(afterDeleteCount, 0);
+        Assertions.assertEquals(0, afterDeleteCount);
     }
 
     @Test
     void deleteByPostId() {
         //만들고 저장
-        ContentEntity contentEntity = ContentEntity.builder().id("dummy_id").content("dummy_content").isComplete(ToDoEntityStatus.uncompleted).indexNum("1").build();
-        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title").color(ColorList.yellow).contents(List.of(contentEntity)).build();
+        ContentEntity contentEntity = ContentEntity.builder().id("dummy_id").content("dummy_content").isComplete(ToDoEntityStatus.UNCOMPLETED).indexNum("1").build();
+        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title").color(ColorList.YELLOW).contents(List.of(contentEntity)).build();
         postRepository.save(postEntity);
 
         //잘 저장됐는지 확인
         PostEntity findPostEntity = postRepository.findById(postEntity.getPostId()).get();
-        Assertions.assertEquals(findPostEntity, postEntity);
+        Assertions.assertEquals(postEntity, findPostEntity);
         long afterSaveCount = postRepository.count();
-        Assertions.assertEquals(afterSaveCount, 1);
+        Assertions.assertEquals(1, afterSaveCount);
 
         //삭제하기 및 확인
         postRepository.deleteByPostId(postEntity.getPostId());
         long afterDeleteCount = postRepository.count();
-        Assertions.assertEquals(afterDeleteCount, 0);
+        Assertions.assertEquals(0, afterDeleteCount);
     }
 }

@@ -21,6 +21,9 @@ import java.util.Map;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
     private final AuthService authService;
+    private static final String SUCCESS = "success";
+    private static final String ERROR_CODE = "error_code";
+    private static final String ITEM = "item";
 
     @Autowired
     public AuthController(AuthService authService){
@@ -33,15 +36,15 @@ public class AuthController {
         Map<String, Object> responseObject = new HashMap<>();
         try {
             Boolean singUpSuccess = authService.signUp(signUpDto);
-            responseObject.put("success", true);
-            responseObject.put("error_code", 0);
-            responseObject.put("item", singUpSuccess);
+            responseObject.put(SUCCESS, true);
+            responseObject.put(ERROR_CODE, 0);
+            responseObject.put(ITEM, singUpSuccess);
 
             return ResponseEntity.status(HttpStatus.OK).body(responseObject);
         } catch (IllegalArgumentException e){
-            responseObject.put("success", false);
-            responseObject.put("error_code", 409);
-            responseObject.put("item", "존재하는 아이디입니다.");
+            responseObject.put(SUCCESS, false);
+            responseObject.put(ERROR_CODE, 409);
+            responseObject.put(ITEM, "존재하는 아이디입니다.");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(responseObject);
         }
     }
@@ -52,25 +55,25 @@ public class AuthController {
         Map<String, Object> responseObject = new HashMap<>();
 
         if (bindingResult.hasErrors()){
-            responseObject.put("success", false);
-            responseObject.put("error_code", 400);
-            responseObject.put("item", "입력 형식이 알맞지 않습니다.");
+            responseObject.put(SUCCESS, false);
+            responseObject.put(ERROR_CODE, 400);
+            responseObject.put(ITEM, "입력 형식이 알맞지 않습니다.");
             //loginDto 가 @Valid 하지 않을 때 이 안으로 들어옴
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseObject);
         }
 
         try {
             String loginSuccess = authService.login(loginDto);
-            responseObject.put("success", true);
-            responseObject.put("error_code", 0);
-            responseObject.put("item", loginSuccess);
+            responseObject.put(SUCCESS, true);
+            responseObject.put(ERROR_CODE, 0);
+            responseObject.put(ITEM, loginSuccess);
 
             return ResponseEntity.status(HttpStatus.OK).body(responseObject);
 
         } catch (IllegalArgumentException e){
-            responseObject.put("success", false);
-            responseObject.put("error_code", 404);
-            responseObject.put("item", "일치하는 회원이 없습니다.");
+            responseObject.put(SUCCESS, false);
+            responseObject.put(ERROR_CODE, 404);
+            responseObject.put(ITEM, "일치하는 회원이 없습니다.");
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseObject);
         }

@@ -64,8 +64,6 @@ public class ToDoServiceImpl implements ToDoService {
 
     @Override
     public ToDoResponsePostDto saveToDo(ToDoRequestPostDto toDoRequestPostDto, String userPersonalId){
-        System.out.println("@@@@@@@@@@@userPersonalId는 " + userPersonalId);
-
         MemberEntity memberEntity = memberRepository.findByPersonalId(userPersonalId)
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 회원이 없습니다."));
 
@@ -101,13 +99,13 @@ public class ToDoServiceImpl implements ToDoService {
         Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
         if (optionalPostEntity.isPresent()){
             PostEntity postEntity = optionalPostEntity.get();
-            PostEntity new_postEntity = new PostEntity();
-            new_postEntity.setPostId(postEntity.getPostId());
-            new_postEntity.setUserId(postEntity.getUserId());
-            new_postEntity.setUserNickname(postEntity.getUserNickname());
-            new_postEntity.setTitle(toDoRequestPostDto.getTitle());
-            new_postEntity.setCreateTime(postEntity.getCreateTime());
-            new_postEntity.setColor(postEntity.getColor());
+            PostEntity newPostEntity = new PostEntity();
+            newPostEntity.setPostId(postEntity.getPostId());
+            newPostEntity.setUserId(postEntity.getUserId());
+            newPostEntity.setUserNickname(postEntity.getUserNickname());
+            newPostEntity.setTitle(toDoRequestPostDto.getTitle());
+            newPostEntity.setCreateTime(postEntity.getCreateTime());
+            newPostEntity.setColor(postEntity.getColor());
 
             List<ContentEntity> contentEntityList = new ArrayList<>();
             for (ToDoRequestContentDto toDoRequestContentDto : toDoRequestPostDto.getContent()) {
@@ -115,13 +113,13 @@ public class ToDoServiceImpl implements ToDoService {
                 contentEntity.setPost(postEntity);
                 contentEntityList.add(contentEntity);
             }
-            new_postEntity.setContents(contentEntityList);
+            newPostEntity.setContents(contentEntityList);
 
-            PostEntity savedPostEntity = postRepository.save(new_postEntity);
+            PostEntity savedPostEntity = postRepository.save(newPostEntity);
 
             return savedPostEntity.toDto();
         } else {
-            throw new RuntimeException("입력한 POST ID와 일치하는 POST가 존재하지 않습니다. Post with ID " + postId + " not found");
+            throw new IllegalArgumentException("입력한 POST ID와 일치하는 POST가 존재하지 않습니다. Post with ID " + postId + " not found");
         }
     }
 
@@ -134,7 +132,7 @@ public class ToDoServiceImpl implements ToDoService {
             contentRepository.save(contentEntity);
             return contentEntity.toDto();
         } else {
-            throw new RuntimeException("입력한 ID와 일치하는 투두가 존재하지 않습니다. Post with ID " + id + " not found");
+            throw new IllegalArgumentException("입력한 ID와 일치하는 투두가 존재하지 않습니다. Post with ID " + id + " not found");
         }
     }
 

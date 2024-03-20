@@ -16,6 +16,6 @@ public @interface WithCustomMockUser {
     String personalId() default "TestPersonalId";
     String password() default "Test_password";
     String nickname() default "Test_nickname";
-    Role role() default Role.ROLE_User;
-    ColorList color() default ColorList.yellow;
+    Role role() default Role.ROLE_USER;
+    ColorList color() default ColorList.YELLOW;
 }

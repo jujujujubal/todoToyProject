@@ -36,10 +36,10 @@ public class ContentEntity {
     private String indexNum;
 
     public void changeComplete(){
-        if (this.isComplete.equals(ToDoEntityStatus.complete)){
-            this.isComplete = ToDoEntityStatus.uncompleted;
+        if (this.isComplete.equals(ToDoEntityStatus.COMPLETE)){
+            this.isComplete = ToDoEntityStatus.UNCOMPLETED;
         } else {
-            this.isComplete = ToDoEntityStatus.complete;
+            this.isComplete = ToDoEntityStatus.COMPLETE;
         }
     }
     public ToDoResponseContentDto toDto() {

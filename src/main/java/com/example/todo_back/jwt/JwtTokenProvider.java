@@ -1,7 +1,5 @@
 package com.example.todo_back.jwt;
 
-import com.example.todo_back.data.constant.ColorList;
-import com.example.todo_back.data.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -81,9 +79,9 @@ public class JwtTokenProvider {
         }
     }
 
-//    //현재 로그인한 사용자의 개인 식별자(Personal ID)를 반환하는 메서드
-//    public static String getLoginUserPersonalId() {
-//        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        return userDetails.getUsername();
-//    }
+    //현재 로그인한 사용자의 개인 식별자(Personal ID)를 반환하는 메서드
+    public static String getLoginUserPersonalId() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetails.getUsername();
+    }
 }

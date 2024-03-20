@@ -29,29 +29,29 @@ class ContentRepositoryTest {
     PostRepository postRepository;
 
     @Test
-    public void testContentEntity() {
-        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title").color(ColorList.yellow).build();
+    void testContentEntity() {
+        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title").color(ColorList.YELLOW).build();
         postRepository.save(postEntity);
-        ContentEntity contentEntity = ContentEntity.builder().id("dummy_id").post(postEntity).content("dummy_content").isComplete(ToDoEntityStatus.uncompleted).indexNum("1").build();
+        ContentEntity contentEntity = ContentEntity.builder().id("dummy_id").post(postEntity).content("dummy_content").isComplete(ToDoEntityStatus.UNCOMPLETED).indexNum("1").build();
         contentRepository.save(contentEntity);
 
         ContentEntity findContentEntity = contentRepository.findById(contentEntity.getId()).get();
 
-        Assertions.assertEquals(findContentEntity.getId(), contentEntity.getId());
-        Assertions.assertEquals(findContentEntity.getPost(), contentEntity.getPost());
-        Assertions.assertEquals(findContentEntity.getContent(), contentEntity.getContent());
-        Assertions.assertEquals(findContentEntity.getIsComplete(), contentEntity.getIsComplete());
-        Assertions.assertEquals(findContentEntity.getIndexNum(), contentEntity.getIndexNum());
-        Assertions.assertEquals(findContentEntity, contentEntity);
+//        Assertions.assertEquals(contentEntity.getId(), findContentEntity.getId());
+//        Assertions.assertEquals(contentEntity.getPost(), findContentEntity.getPost());
+//        Assertions.assertEquals(contentEntity.getContent(), findContentEntity.getContent());
+//        Assertions.assertEquals(contentEntity.getIsComplete(), findContentEntity.getIsComplete());
+//        Assertions.assertEquals(contentEntity.getIndexNum(), findContentEntity.getIndexNum());
+        Assertions.assertEquals(contentEntity, findContentEntity);
     }
 
     @Test
-    public void basicCRUD() {
-        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title").color(ColorList.yellow).build();
+    void basicCRUD() {
+        PostEntity postEntity = PostEntity.builder().postId("dummy_postId").userId("admin").userNickname("dummy_nickname").title("dummy_title").color(ColorList.YELLOW).build();
         postRepository.save(postEntity);
 
-        ContentEntity contentEntity1 = ContentEntity.builder().id("dummy1_id").post(postEntity).content("dummy1_content").isComplete(ToDoEntityStatus.uncompleted).indexNum("1").build();
-        ContentEntity contentEntity2 = ContentEntity.builder().id("dummy2_id").post(postEntity).content("dummy2_content").isComplete(ToDoEntityStatus.uncompleted).indexNum("2").build();
+        ContentEntity contentEntity1 = ContentEntity.builder().id("dummy1_id").post(postEntity).content("dummy1_content").isComplete(ToDoEntityStatus.UNCOMPLETED).indexNum("1").build();
+        ContentEntity contentEntity2 = ContentEntity.builder().id("dummy2_id").post(postEntity).content("dummy2_content").isComplete(ToDoEntityStatus.UNCOMPLETED).indexNum("2").build();
 
         contentRepository.save(contentEntity1);
         contentRepository.save(contentEntity2);
@@ -60,28 +60,28 @@ class ContentRepositoryTest {
         ContentEntity findContentEntity1 = contentRepository.findById(contentEntity1.getId()).get();
         ContentEntity findContentEntity2 = contentRepository.findById(contentEntity2.getId()).get();
 
-        Assertions.assertEquals(findContentEntity1, contentEntity1);
-        Assertions.assertEquals(findContentEntity2, contentEntity2);
+        Assertions.assertEquals(contentEntity1, findContentEntity1);
+        Assertions.assertEquals(contentEntity2, findContentEntity2);
 
         findContentEntity1.setContent("수정 후 content 내용");
 
         //리스트 조회 검증
         List<ContentEntity> allContentEntity = contentRepository.findAll();
-        Assertions.assertEquals(allContentEntity.size(), 2);
+        Assertions.assertEquals(2, allContentEntity.size());
 
         //setContent가 잘 반영되었음을 알 수 있다
-        System.out.println("수정된 내용" + allContentEntity);
+        //System.out.println("수정된 내용" + allContentEntity);
 
         //카운트 검증
         long count = contentRepository.count();
-        Assertions.assertEquals(count, 2);
+        Assertions.assertEquals(2, count);
 
         //삭제 검증
         contentRepository.delete(contentEntity1);
         contentRepository.delete(contentEntity2);
 
         long afterDeleteCount = contentRepository.count();
-        Assertions.assertEquals(afterDeleteCount, 0);
+        Assertions.assertEquals(0, afterDeleteCount);
     }
 
 }

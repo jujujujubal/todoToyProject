@@ -1,5 +1,6 @@
 package com.example.todo_back.controller;
 
+import com.example.todo_back.config.SecurityConfig;
 import com.example.todo_back.data.dto.LoginDto;
 import com.example.todo_back.data.dto.SignUpDto;
 import com.example.todo_back.jwt.CustomUserDetailsService;
@@ -7,7 +8,6 @@ import com.example.todo_back.jwt.JwtTokenProvider;
 import com.example.todo_back.service.impl.AuthServiceImpl;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +15,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.example.todo_back.data.constant.ColorList.yellow;
+import static com.example.todo_back.data.constant.ColorList.YELLOW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static org.mockito.BDDMockito.given;
@@ -32,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = AuthController.class)
 //@AutoConfigureWebMvc
 @AutoConfigureMockMvc
-@Import({JwtTokenProvider.class})
+@Import({JwtTokenProvider.class, SecurityConfig.class})
 @Slf4j
 class AuthControllerTest {
 
@@ -57,7 +56,7 @@ class AuthControllerTest {
         // 패스워드 형식이 올바르지 않은 경우 (400 에러)
         // 닉네임 형식이 올바르지 않은 경우 (아직 닉네임 형식까지는 생각 안 함)
         // 올바른 경우
-        SignUpDto signUpDto = SignUpDto.builder().personalId("test123456").password("test123456").nickname("테스트").color(yellow).build();
+        SignUpDto signUpDto = SignUpDto.builder().personalId("test123456").password("test123456").nickname("테스트").color(YELLOW).build();
 
         given(authService.signUp(signUpDto)).willReturn(true);
 
@@ -87,7 +86,7 @@ class AuthControllerTest {
     @DisplayName("회원가입 실패 - 이미 존재하는 아이디")
     void signUp_duplication() {
         // 이미 존재하는 아이디를 입력한 경우
-        SignUpDto signUpDto = SignUpDto.builder().personalId("test123456").password("test123456").nickname("테스트").color(yellow).build();
+        SignUpDto signUpDto = SignUpDto.builder().personalId("test123456").password("test123456").nickname("테스트").color(YELLOW).build();
 
         given(authService.signUp(signUpDto)).willThrow(new IllegalArgumentException("존재하는 아이디입니다."));
 

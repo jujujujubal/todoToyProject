@@ -1,5 +1,6 @@
 package com.example.todo_back.controller;
 
+import com.example.todo_back.config.SecurityConfig;
 import com.example.todo_back.data.dto.ToDoRequestContentDto;
 import com.example.todo_back.data.dto.ToDoRequestPostDto;
 import com.example.todo_back.data.dto.ToDoResponseContentDto;
@@ -24,8 +25,8 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import static com.example.todo_back.data.constant.ColorList.yellow;
-import static com.example.todo_back.data.constant.ToDoEntityStatus.uncompleted;
+import static com.example.todo_back.data.constant.ColorList.YELLOW;
+import static com.example.todo_back.data.constant.ToDoEntityStatus.UNCOMPLETED;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -39,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = ToDoController.class)
 //@AutoConfigureWebMvc
 @AutoConfigureMockMvc
-@Import({JwtTokenProvider.class})
+@Import({JwtTokenProvider.class, SecurityConfig.class})
 class ToDoControllerTest {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthControllerTest.class);
@@ -54,11 +55,11 @@ class ToDoControllerTest {
     private CustomUserDetailsService customUserDetailsService;
 
     @Test
-    @WithMockUser(username = "admin", roles = "User")
+    @WithMockUser(username = "admin", roles = "USER")
     @DisplayName("ToDo 전부 받아오기 테스트")
     void getToDo() {
-        ToDoResponseContentDto contentDto = ToDoResponseContentDto.builder().id("test_id").content("test_content").isComplete(uncompleted).build();
-        ToDoResponsePostDto postDto = ToDoResponsePostDto.builder().postId("string").userNickname("admin").title("test_title").content(List.of(contentDto)).color(yellow).build();
+        ToDoResponseContentDto contentDto = ToDoResponseContentDto.builder().id("test_id").content("test_content").isComplete(UNCOMPLETED).build();
+        ToDoResponsePostDto postDto = ToDoResponsePostDto.builder().postId("string").userNickname("admin").title("test_title").content(List.of(contentDto)).color(YELLOW).build();
 
         given(toDoService.getToDo()).willReturn(List.of(postDto));
 
@@ -82,11 +83,11 @@ class ToDoControllerTest {
     @WithCustomMockUser
     @DisplayName("ToDo 업로드 테스트")
     void createToDo() {
-        ToDoRequestContentDto toDoRequestContentDto = ToDoRequestContentDto.builder().content("dummyContent").isComplete(uncompleted).indexNum("1").build();
+        ToDoRequestContentDto toDoRequestContentDto = ToDoRequestContentDto.builder().content("dummyContent").isComplete(UNCOMPLETED).indexNum("1").build();
         ToDoRequestPostDto toDoRequestPostDto = ToDoRequestPostDto.builder().title("dummyTitle").content(List.of(toDoRequestContentDto)).build();
 
-        ToDoResponseContentDto contentDto = ToDoResponseContentDto.builder().id("test_id").content("test_content").isComplete(uncompleted).build();
-        ToDoResponsePostDto postDto = ToDoResponsePostDto.builder().postId("string").userNickname("Test_nickname").title("test_title").content(List.of(contentDto)).color(yellow).build();
+        ToDoResponseContentDto contentDto = ToDoResponseContentDto.builder().id("test_id").content("test_content").isComplete(UNCOMPLETED).build();
+        ToDoResponsePostDto postDto = ToDoResponsePostDto.builder().postId("string").userNickname("Test_nickname").title("test_title").content(List.of(contentDto)).color(YELLOW).build();
 
         //WithCustomMockUser 에서 지정한 유저 아이디
         String dummy_id = "TestPersonalId";
@@ -111,14 +112,14 @@ class ToDoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "User")
-    void updatePost() {
+    @WithMockUser(username = "admin", roles = "USER")
+    void updatePost() {//일치하는 postId가 없어서 에러가 발생하는 경우도 다뤄야함
         String postId = "qwerty";
-        ToDoRequestContentDto toDoRequestContentDto = ToDoRequestContentDto.builder().content("dummyContent").isComplete(uncompleted).indexNum("1").build();
+        ToDoRequestContentDto toDoRequestContentDto = ToDoRequestContentDto.builder().content("dummyContent").isComplete(UNCOMPLETED).indexNum("1").build();
         ToDoRequestPostDto toDoRequestPostDto = ToDoRequestPostDto.builder().title("dummyTitle").content(List.of(toDoRequestContentDto)).build();
 
-        ToDoResponseContentDto contentDto = ToDoResponseContentDto.builder().id("test_id").content("test_content").isComplete(uncompleted).build();
-        ToDoResponsePostDto postDto = ToDoResponsePostDto.builder().postId("string").userNickname("Test_nickname").title("test_title").content(List.of(contentDto)).color(yellow).build();
+        ToDoResponseContentDto contentDto = ToDoResponseContentDto.builder().id("test_id").content("test_content").isComplete(UNCOMPLETED).build();
+        ToDoResponsePostDto postDto = ToDoResponsePostDto.builder().postId("string").userNickname("Test_nickname").title("test_title").content(List.of(contentDto)).color(YELLOW).build();
 
         given(toDoService.updateToDo(toDoRequestPostDto, postId)).willReturn(postDto);
 
@@ -140,11 +141,11 @@ class ToDoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "User")
-    void changeComplete() {
+    @WithMockUser(username = "admin", roles = "USER")
+    void changeComplete() {//일치하는 contentId가 없어서 에러가 발생하는 경우도 다뤄야함
         String contentId = "qwerty";
 
-        ToDoResponseContentDto contentDto = ToDoResponseContentDto.builder().id(contentId).content("string").isComplete(uncompleted).build();
+        ToDoResponseContentDto contentDto = ToDoResponseContentDto.builder().id(contentId).content("string").isComplete(UNCOMPLETED).build();
 
         given(toDoService.changeComplete(contentId)).willReturn(contentDto);
 
@@ -162,7 +163,7 @@ class ToDoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "User")
+    @WithMockUser(username = "admin", roles = "USER")
     void deleteToDo() {
         String postId = "qwerty";
         String returnString = "정상적으로 삭제되었습니다.";

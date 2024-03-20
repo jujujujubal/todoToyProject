@@ -27,19 +27,19 @@ class MemberRepositoryTest {
     MemberRepository memberRepository;
 
     @Test
-    public void testContentEntity() {
-        MemberEntity memberEntity = MemberEntity.builder().personalId("dummyPersonalId").password("dummy_password").nickname("admin").role(Role.ROLE_User).color(ColorList.yellow).build();
+    void testContentEntity() {
+        MemberEntity memberEntity = MemberEntity.builder().personalId("dummyPersonalId").password("dummy_password").nickname("admin").role(Role.ROLE_USER).color(ColorList.YELLOW).build();
         memberRepository.save(memberEntity);
 
         MemberEntity findMemberEntity = memberRepository.findById(memberEntity.getPersonalId()).get();
 
-        Assertions.assertEquals(findMemberEntity, memberEntity);
+        Assertions.assertEquals(memberEntity, findMemberEntity);
     }
 
     @Test
-    public void basicCRUD() {
-        MemberEntity memberEntity1 = MemberEntity.builder().personalId("dummyPersonalId1").password("dummy_password").nickname("admin1").role(Role.ROLE_User).color(ColorList.yellow).build();
-        MemberEntity memberEntity2 = MemberEntity.builder().personalId("dummyPersonalId2").password("dummy_password").nickname("admin2").role(Role.ROLE_User).color(ColorList.yellow).build();
+    void basicCRUD() {
+        MemberEntity memberEntity1 = MemberEntity.builder().personalId("dummyPersonalId1").password("dummy_password").nickname("admin1").role(Role.ROLE_USER).color(ColorList.YELLOW).build();
+        MemberEntity memberEntity2 = MemberEntity.builder().personalId("dummyPersonalId2").password("dummy_password").nickname("admin2").role(Role.ROLE_USER).color(ColorList.YELLOW).build();
         memberRepository.save(memberEntity1);
         memberRepository.save(memberEntity2);
 
@@ -47,37 +47,37 @@ class MemberRepositoryTest {
         MemberEntity findMemberEntity1 = memberRepository.findById(memberEntity1.getPersonalId()).get();
         MemberEntity findMemberEntity2 = memberRepository.findById(memberEntity2.getPersonalId()).get();
 
-        Assertions.assertEquals(findMemberEntity1, memberEntity1);
-        Assertions.assertEquals(findMemberEntity2, memberEntity2);
+        Assertions.assertEquals(memberEntity1, findMemberEntity1);
+        Assertions.assertEquals(memberEntity2, findMemberEntity2);
 
         findMemberEntity1.setNickname("변경된 닉네임");
 
         //리스트 조회 검증
         List<MemberEntity> allMemberEntity = memberRepository.findAll();
-        Assertions.assertEquals(allMemberEntity.size(), 2);
+        Assertions.assertEquals(2, allMemberEntity.size());
 
         //setContent가 잘 반영되었음을 알 수 있다
-        System.out.println("수정된 닉네임" + allMemberEntity);
+        //System.out.println("수정된 닉네임" + allMemberEntity);
 
         //카운트 검증
         long count = memberRepository.count();
-        Assertions.assertEquals(count, 2);
+        Assertions.assertEquals(2, count);
 
         //삭제 검증
         memberRepository.delete(memberEntity1);
         memberRepository.delete(memberEntity2);
 
         long afterDeleteCount = memberRepository.count();
-        Assertions.assertEquals(afterDeleteCount, 0);
+        Assertions.assertEquals(0, afterDeleteCount);
     }
 
     @Test
     void findByPersonalId() {
-        MemberEntity memberEntity = MemberEntity.builder().personalId("dummyPersonalId").password("dummy_password").nickname("admin").role(Role.ROLE_User).color(ColorList.yellow).build();
+        MemberEntity memberEntity = MemberEntity.builder().personalId("dummyPersonalId").password("dummy_password").nickname("admin").role(Role.ROLE_USER).color(ColorList.YELLOW).build();
         memberRepository.save(memberEntity);
 
         MemberEntity findMemberEntity = memberRepository.findByPersonalId(memberEntity.getPersonalId()).get();
 
-        Assertions.assertEquals(findMemberEntity, memberEntity);
+        Assertions.assertEquals(memberEntity, findMemberEntity);
     }
 }
