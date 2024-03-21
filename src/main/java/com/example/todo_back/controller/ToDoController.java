@@ -17,9 +17,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin("http://localhost:8081")
-@CrossOrigin("*")
+//@CrossOrigin("*")
 @RequestMapping("/api/v1/todo")
 public class ToDoController {
     private final ToDoService toDoService;

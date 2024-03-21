@@ -15,9 +15,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin("http://localhost:8081")
-@CrossOrigin("*")
+//@CrossOrigin("*")
 @RequestMapping("/api/v1/auth")
 public class AuthController {
     private final AuthService authService;

@@ -1,5 +1,5 @@
 package com.example.todo_back.data.dto;
-import com.example.todo_back.data.constant.ColorList;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

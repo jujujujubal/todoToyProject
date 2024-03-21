@@ -1,14 +1,13 @@
 package com.example.todo_back.jwt;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -19,14 +18,15 @@ import java.util.Date;
 
 @RequiredArgsConstructor
 @Component
+@Data
 public class JwtTokenProvider {
 
     @Value("${security.jwt.secret}")
     private String secretKey;
 
     // 토큰 유효시간 168 시간(7일)
-    private long tokenValidTime = 1440 * 60 * 7 * 1000L;
     private final CustomUserDetailsService customUserDetailsService;
+    private static final long TOKEN_VALID_TIME = 1440 * 60 * 7 * 1000L;
     public static final String HEADER_ACCESS_TOKEN = "Authorization";
     public static final String HEADER_REFRESH_TOKEN = "X-REFRESH-TOKEN";
 
@@ -44,7 +44,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간
-                .setExpiration(new Date(now.getTime() + tokenValidTime)) // 토큰 유효 시간
+                .setExpiration(new Date(now.getTime() + TOKEN_VALID_TIME)) // 토큰 유효 시간
                 .signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘
                 .compact();
     }
@@ -52,7 +52,7 @@ public class JwtTokenProvider {
     // JWT 토큰에서 인증 정보 조회
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(this.getPersonalId(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "password", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
     }
 
     // 토큰에서 회원 정보 추출
@@ -65,23 +65,19 @@ public class JwtTokenProvider {
         String bearerToken = request.getHeader(HEADER_ACCESS_TOKEN);
         if (bearerToken != null && bearerToken.startsWith("Bearer ")){
             return bearerToken.substring(7);
+        } else {
+            return null;
         }
-        return "";
     }
 
     // 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-            return !claims.getBody().getExpiration().before(new Date());
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
+            //만료된 토큰은 전부 catch 되기에 !claims.getBody().getExpiration().before(new Date()) 는 항상 true 이다
+            return true;
         } catch (Exception e) {
             return false;
         }
-    }
-
-    //현재 로그인한 사용자의 개인 식별자(Personal ID)를 반환하는 메서드
-    public static String getLoginUserPersonalId() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userDetails.getUsername();
     }
 }
